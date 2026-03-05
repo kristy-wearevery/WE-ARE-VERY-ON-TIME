@@ -118,10 +118,13 @@ export default function App() {
     localStorage.setItem("worldtime-theme", darkMode ? "dark" : "light");
   }, [darkMode]);
   useEffect(() => {
-    const params = new URLSearchParams();
-    params.set("cities", selected.map(z => `${z.city}|${z.tz}|${z.country}`).join(","));
-    if (offset !== 0) params.set("offset", offset);
-    window.history.replaceState(null, "", `?${params}`);
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams();
+      params.set("cities", selected.map(z => `${z.city}|${z.tz}|${z.country}`).join(","));
+      if (offset !== 0) params.set("offset", offset);
+      window.history.replaceState(null, "", `?${params}`);
+    }, 300);
+    return () => clearTimeout(timer);
   }, [selected, offset]);
 
   const applyPreciseTime = () => {
@@ -142,11 +145,11 @@ export default function App() {
 
   const resetAll = () => { setOffset(0); setPickerTime(nowLocalTime()); setPickerDate(nowLocalDate()); };
 
-  const reorder = (fromTz, toTz) => {
+  const reorder = (fromCity, toCity) => {
     setSelected(s => {
       const arr = [...s];
-      const fi = arr.findIndex(z => z.tz === fromTz);
-      const ti = arr.findIndex(z => z.tz === toTz);
+      const fi = arr.findIndex(z => z.city === fromCity);
+      const ti = arr.findIndex(z => z.city === toCity);
       if (fi === -1 || ti === -1) return s;
       const [item] = arr.splice(fi, 1);
       arr.splice(ti, 0, item);
@@ -157,7 +160,7 @@ export default function App() {
   const zones = selected;
 
   const results = TIMEZONES.filter(z =>
-    z.city.toLowerCase().includes(search.toLowerCase()) && !selected.some(s => s.tz === z.tz)
+    z.city.toLowerCase().includes(search.toLowerCase()) && !selected.some(s => s.city === z.city)
   );
 
   const offsetMs = offset * 60000;
@@ -322,16 +325,16 @@ export default function App() {
           const { bg, text, light } = getBg(h);
           const work = h >= 9 && h < 18;
           const titleColor = light ? "#111" : "#fff";
-          const isDragging = dragId === zone.tz;
-          const isDropTarget = dragOverId === zone.tz && !isDragging;
+          const isDragging = dragId === zone.city;
+          const isDropTarget = dragOverId === zone.city && !isDragging;
           return (
-            <div key={zone.tz}
-              data-cardid={zone.tz}
+            <div key={zone.city}
+              data-cardid={zone.city}
               draggable={true}
-              onDragStart={() => { dragRef.current = zone.tz; setDragId(zone.tz); setDragOverId(null); }}
-              onDragOver={e => { e.preventDefault(); if (dragRef.current && zone.tz !== dragRef.current) setDragOverId(zone.tz); }}
-              onDragLeave={() => { if (dragOverId === zone.tz) setDragOverId(null); }}
-              onDrop={e => { e.preventDefault(); if (dragRef.current && zone.tz !== dragRef.current) reorder(dragRef.current, zone.tz); setDragOverId(null); }}
+              onDragStart={() => { dragRef.current = zone.city; setDragId(zone.city); setDragOverId(null); }}
+              onDragOver={e => { e.preventDefault(); if (dragRef.current && zone.city !== dragRef.current) setDragOverId(zone.city); }}
+              onDragLeave={() => { if (dragOverId === zone.city) setDragOverId(null); }}
+              onDrop={e => { e.preventDefault(); if (dragRef.current && zone.city !== dragRef.current) reorder(dragRef.current, zone.city); setDragOverId(null); }}
               onDragEnd={() => { dragRef.current = null; setDragId(null); setDragOverId(null); }}
               onMouseEnter={e => { if (!isDragging && !isMobile) { e.currentTarget.style.transform = "translateY(-6px)"; e.currentTarget.style.boxShadow = "0 18px 48px rgba(0,0,0,0.6)"; } }}
               onMouseLeave={e => { if (!isMobile) { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.45)"; } }}
@@ -347,7 +350,7 @@ export default function App() {
                 opacity: isDragging ? 0.35 : 1,
                 userSelect: "none",
               }}>
-              <button onClick={() => setSelected(s => s.filter(x => x.tz !== zone.tz))}
+              <button onClick={() => setSelected(s => s.filter(x => x.city !== zone.city))}
                 style={{ position: "absolute", top: 10, right: 10, background: light ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.1)", border: "none", color: text, width: isMobile ? 20 : 22, height: isMobile ? 20 : 22, borderRadius: "50%", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.6 }}>
                 ✕
               </button>
