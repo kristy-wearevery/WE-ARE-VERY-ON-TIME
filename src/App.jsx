@@ -91,8 +91,8 @@ export default function App() {
   const [copied, setCopied] = useState(false);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 640);
   const [darkMode, setDarkMode] = useState(() => {
-    try { return localStorage.getItem("worldtime-theme") !== "light"; }
-    catch { return true; }
+    try { return localStorage.getItem("worldtime-theme") === "dark"; }
+    catch { return false; }
   });
   const [dragId, setDragId] = useState(null);
   const [dragOverId, setDragOverId] = useState(null);
@@ -185,7 +185,7 @@ export default function App() {
     workDot:     "rgba(255,255,255,0.7)",
     offDot:      "rgba(255,255,255,0.15)",
   } : {
-    bg:          "#f0f0f0",
+    bg:          "#ffffff",
     surface:     "rgba(0,0,0,0.05)",
     border:      "rgba(0,0,0,0.1)",
     inputBg:     "rgba(0,0,0,0.05)",
