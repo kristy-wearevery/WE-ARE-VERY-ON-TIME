@@ -235,7 +235,26 @@ export default function App() {
             style={{ background: T.surface, border: `1px solid ${T.border}`, color: T.text, borderRadius: 9, padding: "7px 12px", fontSize: 15, cursor: "pointer" }}>
             {darkMode ? "☀️" : "🌙"}
           </button>
-          <button onClick={() => { navigator.clipboard.writeText(window.location.href).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }); }}
+          <button onClick={() => {
+              const cities = selected.map(z => `${z.city}|${z.tz}|${z.country}`).join(",");
+              const qs = new URLSearchParams({ cities });
+              if (offset !== 0) qs.set("offset", String(offset));
+              const url = `https://wearevery.com/on-time?${qs}`;
+              const doCopy = () => {
+                const el = document.createElement("textarea");
+                el.value = url;
+                el.style.cssText = "position:fixed;opacity:0;pointer-events:none";
+                document.body.appendChild(el); el.focus(); el.select();
+                try { document.execCommand("copy"); } catch {}
+                document.body.removeChild(el);
+                setCopied(true); setTimeout(() => setCopied(false), 2000);
+              };
+              if (navigator.clipboard?.writeText) {
+                navigator.clipboard.writeText(url)
+                  .then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); })
+                  .catch(doCopy);
+              } else { doCopy(); }
+            }}
             style={{ flex: isMobile ? 1 : "none", background: copied ? "rgba(54,173,52,0.2)" : T.surface, border: `1px solid ${copied ? C.green : T.border}`, color: copied ? C.green : T.text, borderRadius: 9, padding: "7px 15px", fontSize: 13, cursor: "pointer", transition: "all 0.2s" }}>
             {copied ? "✓ Copied!" : "Share"}
           </button>
