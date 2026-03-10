@@ -220,14 +220,16 @@ export default function App() {
       {/* Header */}
       <div style={{ padding: isMobile ? "12px 14px" : "16px 22px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: isMobile ? 10 : 0, borderBottom: `1px solid ${T.border}` }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 34, height: 34, borderRadius: 10, background: C.red, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="10" cy="10" r="8.5" stroke="white" strokeWidth="1.5"/>
-              <ellipse cx="10" cy="10" rx="4" ry="8.5" stroke="white" strokeWidth="1.5"/>
-              <line x1="1.5" y1="7" x2="18.5" y2="7" stroke="white" strokeWidth="1.5"/>
-              <line x1="1.5" y1="13" x2="18.5" y2="13" stroke="white" strokeWidth="1.5"/>
-            </svg>
-          </div>
+          <a href="https://wearevery.com/on-time" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", flexShrink: 0 }}>
+            <div style={{ width: 34, height: 34, borderRadius: 10, background: C.red, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="10" cy="10" r="8.5" stroke="white" strokeWidth="1.5"/>
+                <ellipse cx="10" cy="10" rx="4" ry="8.5" stroke="white" strokeWidth="1.5"/>
+                <line x1="1.5" y1="7" x2="18.5" y2="7" stroke="white" strokeWidth="1.5"/>
+                <line x1="1.5" y1="13" x2="18.5" y2="13" stroke="white" strokeWidth="1.5"/>
+              </svg>
+            </div>
+          </a>
           <div style={{ color: T.text, fontWeight: 800, fontSize: 15, letterSpacing: "-0.01em" }}>WE ARE VERY ON TIME</div>
         </div>
         <div style={{ display: "flex", gap: 8, flex: isMobile ? "1 0 100%" : "0", justifyContent: isMobile ? "stretch" : "flex-end" }}>
